@@ -443,12 +443,9 @@ void nfc_tag_14a_data_process(uint8_t *p_data) {
                         return;
                     case NFC_TAG_14A_CMD_REQA:
                     case NFC_TAG_14A_CMD_WUPA:
-                        // Reader is re-sending REQA/WUPA while in READY state
-                        // This can happen if reader retries or if frame was received incorrectly
-                        // Respond with ATQA again and stay in READY state
-                        if (auto_coll_res != NULL) {
-                            nfc_tag_14a_tx_bytes(auto_coll_res->atqa, 2, false);
-                        }
+                        // REQA/WUPA are 7-bit short frames only. A longer frame starting
+                        // with 0x26/0x52 is malformed; genuine cards stay silent, while
+                        // answering ATQA here fingerprints the emulator to strict readers.
                         return;
                     default: {
                         // After receiving the wrong level instruction, directly reset the status machine
