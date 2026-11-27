@@ -568,7 +568,9 @@ void nfc_tag_14a_data_process(uint8_t *p_data) {
                         // Back to ATS data according to FSD, FSD is the largest frame size supported by PCD. After removing CRC, it is the actual data frame size support
                         nfc_tag_14a_tx_bytes(auto_coll_res->ats->data, len, true);
                     } else {
-                        nfc_tag_14a_tx_nbit(NAK_INVALID_OPERATION_TBIV, 4);
+                        // Genuine MIFARE Classic answers RATS with 0x05 (transmission error),
+                        // not 0x04 (command not allowed); strict readers fingerprint this.
+                        nfc_tag_14a_tx_nbit(NAK_CRC_PARITY_ERROR_TBIV, 4);
                     }
                     // After handling the explicitly sending RATS instructions outside the outside, wait directly for the next round of communication
                     return;
