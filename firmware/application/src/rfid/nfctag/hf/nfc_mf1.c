@@ -643,6 +643,9 @@ void nfc_tag_mf1_state_handler(uint8_t *p_data, uint16_t szDataBits) {
                             m_tag_tx_buffer.tx_raw_buffer[2] = CardNonce[2];
                             m_tag_tx_buffer.tx_raw_buffer[3] = CardNonce[3];
 
+                            // Start TX before the slow Crypto1 setup so the auth reply meets strict reader FDT windows.
+                            nfc_tag_14a_tx_bytes(m_tag_tx_buffer.tx_raw_buffer, 4, false);
+
 #ifdef NFC_MF1_FAST_SIM
                             Crypto1Setup(
                                 // Select A or B secrets based on the current instruction type
@@ -663,8 +666,6 @@ void nfc_tag_mf1_state_handler(uint8_t *p_data, uint16_t szDataBits) {
                             // Set key flow
                             crypto1_word(pcs, bytes_to_num(UID_BY_CASCADE_LEVEL, 4) ^ bytes_to_num(CardNonce, 4), 0);
 #endif
-                            // Responsible for clear -scale random number to read the card reader
-                            nfc_tag_14a_tx_bytes(m_tag_tx_buffer.tx_raw_buffer, 4, false);
                             break;
                         }
                         case CMD_READ: {
