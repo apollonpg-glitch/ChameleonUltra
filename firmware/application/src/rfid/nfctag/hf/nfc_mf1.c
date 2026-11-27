@@ -408,11 +408,11 @@ uint8_t nfc_tag_mf1_get_prng_type(void) {
 void nfc_tag_mf1_random_nonce(uint8_t nonce[4], bool isNested) {
     uint8_t prng_type = m_tag_information->config.prng_type;
     if (prng_type == 0) {
-        // STATIC — always return same nonce (clone-card behaviour)
-        nonce[0] = 0x01;
-        nonce[1] = 0x02;
-        nonce[2] = 0x03;
-        nonce[3] = 0x04;
+        // STATIC — always return same nonce (Eltis card fingerprint 009080A2)
+        nonce[0] = 0x00;
+        nonce[1] = 0x90;
+        nonce[2] = 0x80;
+        nonce[3] = 0xA2;
     } else if (prng_type == 1) {
         // WEAK — real MFC LFSR, advance 32 clocks per call
         m_prng_state = prng_successor(m_prng_state, 32);
