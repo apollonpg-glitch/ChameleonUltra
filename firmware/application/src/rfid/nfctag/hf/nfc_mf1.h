@@ -4,9 +4,8 @@
 #include "nfc_14a.h"
 #include "netdata.h"
 
-// Exchange space for time.
-// Fast simulate enable(Implement By ChameleonMini Repo)
-// #define NFC_MF1_FAST_SIM
+// Fast table-based Crypto1: cuts read-reply FDT to match genuine MIFARE Classic.
+#define NFC_MF1_FAST_SIM
 
 #define NFC_TAG_MF1_DATA_SIZE   16
 #define NFC_TAG_MF1_FRAME_SIZE  (NFC_TAG_MF1_DATA_SIZE + NFC_TAG_14A_CRC_LENGTH)
